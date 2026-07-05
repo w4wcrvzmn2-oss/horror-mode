@@ -95,6 +95,10 @@ public final class ClientAudioManager {
                 schedule(0, SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE, pos, volume * 1.4f, 0.75f);
                 schedule(3, SoundEvents.ENTITY_ENDERMAN_SCREAM, pos, volume, 0.45f);
             }
+            // non-positional on purpose: the recording is stereo — one set of voices
+            // in the left ear, another in the right; 3D audio would merge them
+            case VOICES -> client.getSoundManager().play(PositionedSoundInstance.master(
+                    ru.exeswi.exest.registry.ModSounds.VOICESTART, 1.0f, volume));
         }
     }
 

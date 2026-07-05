@@ -79,6 +79,7 @@ public final class FinalHunt {
         for (ServerPlayerEntity player : world.getPlayers()) {
             manager.mood(player, 0.6f, 0.4f, 0, HUNT_DURATION_TICKS);
             HorrorNetworking.sendCueBehind(player, SoundCue.STING, 1.2f);
+            HorrorNetworking.sendCueBehind(player, SoundCue.VOICES, 1.0f);
             HorrorNetworking.sendCueBehind(player, SoundCue.HEARTBEAT, 1.0f);
         }
         MinecraftServer server = world.getServer();

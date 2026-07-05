@@ -109,4 +109,14 @@ public final class HorrorUtil {
     public static boolean isNightOrDark(World world, BlockPos pos) {
         return world.isNight() || world.getLightLevel(pos) < 6;
     }
+
+    /** "Home" heuristic: a wooden door within the given radius of the position. */
+    public static boolean isNearDoor(World world, BlockPos center, int radius) {
+        for (BlockPos pos : BlockPos.iterateOutwards(center, radius, 4, radius)) {
+            if (world.getBlockState(pos).isIn(net.minecraft.registry.tag.BlockTags.WOODEN_DOORS)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

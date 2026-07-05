@@ -19,7 +19,12 @@ public enum SoundCue {
     CRYING,
     HEARTBEAT,
     /** Loud, sharp jumpscare sting. */
-    STING;
+    STING,
+    /**
+     * Overlapping voices pressing on the mind (custom stereo recording — different
+     * voices in each ear with headphones). Always played non-positionally.
+     */
+    VOICES;
 
     private static final SoundCue[] VALUES = values();
 

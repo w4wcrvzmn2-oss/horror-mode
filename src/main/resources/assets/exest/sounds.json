@@ -1,0 +1,18 @@
+{
+	"fall": {
+		"sounds": [
+			{
+				"name": "exest:fall",
+				"stream": false
+			}
+		]
+	},
+	"voicestart": {
+		"sounds": [
+			{
+				"name": "exest:voicestart",
+				"stream": true
+			}
+		]
+	}
+}

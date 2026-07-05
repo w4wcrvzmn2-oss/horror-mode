@@ -52,6 +52,10 @@ public abstract class AbstractHorrorEntity extends HostileEntity {
     private boolean finalBoss;
     private boolean spawnedBehind;
     private boolean everStared;
+    private boolean homeApproachPlayed;
+
+    /** Shared cooldown so a pack closing in doesn't layer the approach sting. */
+    private static final java.util.Map<java.util.UUID, Long> LAST_HOME_APPROACH = new java.util.HashMap<>();
 
     protected AbstractHorrorEntity(EntityType<? extends HostileEntity> type, World world) {
         super(type, world);
@@ -92,6 +96,7 @@ public abstract class AbstractHorrorEntity extends HostileEntity {
             }
         }
         tickCampingCounter();
+        tickHomeApproach();
         // creatures that overstayed their welcome leave quietly, but never on camera
         if (maxLifeTicks > 0 && lifeTicks > maxLifeTicks && !isSeenByAnyone()) {
             discard();
@@ -372,6 +377,32 @@ public abstract class AbstractHorrorEntity extends HostileEntity {
             world.breakBlock(supportBreakPos, false, this);
             supportBreakPos = null;
         }
+    }
+
+    /**
+     * The approach sting: the first time this creature closes within 16 blocks of a
+     * player who is at home (a door nearby), a heavy sound rolls over the world —
+     * whether they are awake to hear it or it becomes part of the dream.
+     */
+    private void tickHomeApproach() {
+        if (homeApproachPlayed || apparition || lifeTicks % 20 != 0) {
+            return;
+        }
+        ServerPlayerEntity player = closestSurvivalPlayer(16.0);
+        if (player == null || !HorrorUtil.isNearDoor(getWorld(), player.getBlockPos(), 10)) {
+            return;
+        }
+        homeApproachPlayed = true;
+        long now = getWorld().getTime();
+        Long last = LAST_HOME_APPROACH.get(player.getUuid());
+        if (last != null && now - last < 1200) {
+            return;
+        }
+        LAST_HOME_APPROACH.put(player.getUuid(), now);
+        getWorld().playSound(null, player.getX(), player.getY(), player.getZ(),
+                ru.exeswi.exest.registry.ModSounds.FALL, SoundCategory.HOSTILE,
+                (float) ConfigManager.get().audioIntensity, 1.0f);
+        SanityManager.modify(player, -4.0f);
     }
 
     /**

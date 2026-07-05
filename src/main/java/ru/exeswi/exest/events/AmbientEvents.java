@@ -79,6 +79,16 @@ public final class AmbientEvents {
                     SanityManager.modify(p, -1.5f);
                 }).register();
 
+        // the voices: a custom stereo recording that crawls into both ears at once.
+        // rare and sanity-gated so it stays an event, not a background loop
+        HorrorEvent.builder("voices", AMBIENT).weight(7).cooldown(6000)
+                .enabledWhen(c -> c.audioIntensity > 0)
+                .condition(p -> SanityManager.get(p) < 65.0f)
+                .action((p, m) -> {
+                    m.cueBehind(p, SoundCue.VOICES, 0.9f);
+                    SanityManager.modify(p, -4.0f);
+                }).register();
+
         // the lights go out: sudden near-total darkness for about five seconds
         HorrorEvent.builder("darkness_pulse", AMBIENT).weight(9).cooldown(3600)
                 .enabledWhen(c -> c.enableDarkness)

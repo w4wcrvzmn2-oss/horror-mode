@@ -78,5 +78,10 @@ public final class ClientTickHandler {
         if (ClientHorrorState.sanity < 15.0f && RANDOM.nextInt(600) == 0) {
             ClientHorrorState.blink(20);
         }
+        // a nearly broken mind starts hearing the voices on its own
+        if (ClientHorrorState.sanity < 25.0f && RANDOM.nextInt(3600) == 0) {
+            ClientAudioManager.localCue(client, SoundCue.VOICES,
+                    0.7f * (float) ConfigManager.get().audioIntensity);
+        }
     }
 }

@@ -40,6 +40,7 @@ public class Exest implements ModInitializer {
         ConfigManager.load();
         HorrorNetworking.register();
         ModEntities.registerAttributes();
+        ru.exeswi.exest.registry.ModSounds.init();
 
         AmbientEvents.registerAll();
         EncounterEvents.registerAll();
