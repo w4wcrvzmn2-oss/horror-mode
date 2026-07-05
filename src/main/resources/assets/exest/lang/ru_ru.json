@@ -1,0 +1,15 @@
+{
+	"entity.exest.stalker": "Сталкер",
+	"entity.exest.shadow": "Высокий",
+	"entity.exest.smiler": "Улыбающийся",
+	"entity.exest.broken_villager": "Сломанный житель",
+	"entity.exest.crawler": "Ползун",
+	"entity.exest.faceless": "Безликий",
+	"entity.exest.eyeless_zombie": "Безглазый",
+	"entity.exest.distorted_enderman": "Искажённый",
+	"entity.exest.flesh": "Сгусток плоти",
+	"entity.exest.mimic": "Мимик",
+	"entity.exest.predator": "Незримый",
+	"category.exest.horror": "Horror Mode",
+	"key.exest.toggle_hud": "Показать/скрыть HUD ужаса"
+}

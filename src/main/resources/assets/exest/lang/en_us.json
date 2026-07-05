@@ -1,0 +1,15 @@
+{
+	"entity.exest.stalker": "Stalker",
+	"entity.exest.shadow": "The Tall One",
+	"entity.exest.smiler": "Smiler",
+	"entity.exest.broken_villager": "Broken Villager",
+	"entity.exest.crawler": "Crawler",
+	"entity.exest.faceless": "Faceless",
+	"entity.exest.eyeless_zombie": "Eyeless One",
+	"entity.exest.distorted_enderman": "Distorted One",
+	"entity.exest.flesh": "Flesh Amalgam",
+	"entity.exest.mimic": "Mimic",
+	"entity.exest.predator": "The Unseen",
+	"category.exest.horror": "Horror Mode",
+	"key.exest.toggle_hud": "Toggle Horror HUD"
+}

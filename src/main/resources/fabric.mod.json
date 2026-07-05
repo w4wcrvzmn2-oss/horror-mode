@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "exest",
+	"version": "${version}",
+	"name": "Horror Mode",
+	"description": "A psychological horror conversion: dynamic darkness, a hidden sanity system, intelligent stalking monsters, hallucinations, corrupted world and events that make you doubt what you just saw.",
+	"authors": [
+		"exeswi"
+	],
+	"contact": {},
+	"license": "CC0-1.0",
+	"icon": "assets/exest/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"ru.exeswi.exest.Exest"
+		],
+		"client": [
+			"ru.exeswi.exest.client.ExestClient"
+		],
+		"modmenu": [
+			"ru.exeswi.exest.client.modmenu.ModMenuIntegration"
+		]
+	},
+	"suggests": {
+		"modmenu": "*"
+	},
+	"mixins": [
+		"exest.mixins.json",
+		{
+			"config": "exest.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
