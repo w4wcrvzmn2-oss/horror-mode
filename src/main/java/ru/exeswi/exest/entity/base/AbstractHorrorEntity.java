@@ -399,9 +399,9 @@ public abstract class AbstractHorrorEntity extends HostileEntity {
             return;
         }
         LAST_HOME_APPROACH.put(player.getUuid(), now);
-        getWorld().playSound(null, player.getX(), player.getY(), player.getZ(),
-                ru.exeswi.exest.registry.ModSounds.FALL, SoundCategory.HOSTILE,
-                (float) ConfigManager.get().audioIntensity, 1.0f);
+        // sent as a client cue: the recording is stereo, so it must play non-positionally
+        HorrorNetworking.sendCueBehind(player, SoundCue.APPROACH,
+                (float) ConfigManager.get().audioIntensity);
         SanityManager.modify(player, -4.0f);
     }
 
@@ -517,27 +517,29 @@ public abstract class AbstractHorrorEntity extends HostileEntity {
         if (target == null) {
             return false;
         }
-        if (target.getHealth() <= 10.0f) {
+        // the night belongs to it: after dark it does not hesitate at all
+        if (getWorld().isNight()) {
             return true;
         }
-        if (getWorld().getLightLevel(target.getBlockPos()) < 4) {
+        if (target.getHealth() <= 12.0f) {
             return true;
         }
-        if (target instanceof PlayerEntity player) {
-            boolean isolated = getWorld().getPlayers().stream()
-                    .noneMatch(p -> p != player && !p.isSpectator()
-                            && p.squaredDistanceTo(player) < 24.0 * 24.0);
-            if (isolated && getWorld().isNight()) {
-                return true;
-            }
+        if (getWorld().getLightLevel(target.getBlockPos()) < 6) {
+            return true;
+        }
+        // you let it get within arm's reach — it takes the opening
+        if (squaredDistanceTo(target) < 16.0) {
+            return true;
         }
         long packSize = getWorld().getEntitiesByClass(AbstractHorrorEntity.class,
                 Box.of(target.getPos(), 32, 16, 32), e -> !e.isApparition()).size();
-        if (packSize >= 3) {
+        if (packSize >= 2) {
             return true;
         }
+        // individuals grow bolder as the horror matures; only broad daylight at a
+        // distance still buys you the watching phase
         int level = getWorld() instanceof ServerWorld sw ? DifficultyScaler.level(sw) : 0;
-        return unpredictability > 0.85f && level >= 5;
+        return unpredictability > Math.max(0.3f, 0.9f - level * 0.06f);
     }
 
     /** Grants the difficulty-scaled damage bonus; call right after spawning. */

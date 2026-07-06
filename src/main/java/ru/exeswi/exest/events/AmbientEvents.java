@@ -79,6 +79,11 @@ public final class AmbientEvents {
                     SanityManager.modify(p, -1.5f);
                 }).register();
 
+        // weight 0: manual test hook for the custom approach sting
+        // (/horror event approach_sound)
+        HorrorEvent.builder("approach_sound", AMBIENT).weight(0).cooldown(100)
+                .action((p, m) -> m.cueBehind(p, SoundCue.APPROACH, 1.0f)).register();
+
         // the voices: a custom stereo recording that crawls into both ears at once.
         // rare and sanity-gated so it stays an event, not a background loop
         HorrorEvent.builder("voices", AMBIENT).weight(7).cooldown(6000)

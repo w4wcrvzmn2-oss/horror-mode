@@ -82,12 +82,18 @@ public final class SanityManager {
         if (Boolean.TRUE.equals(wasSleeping.get(player.getUuid())) && !sleeping) {
             delta += handleWakeUp(player, world);
         }
-        // mid-sleep: sometimes the night decides you are not allowed to skip it
+        // mid-sleep: sometimes the night decides you are not allowed to skip it —
+        // 15% you are ripped out of bed, another 25% something is already at the bed
         if (sleeping && !Boolean.TRUE.equals(yankRolled.get(player.getUuid()))
                 && player.getSleepTimer() > 80) {
             yankRolled.put(player.getUuid(), true);
-            if (ConfigManager.get().enableJumpscares && player.getRandom().nextFloat() < 0.15f) {
-                yankFromBed(player, world);
+            if (ConfigManager.get().enableJumpscares) {
+                float roll = player.getRandom().nextFloat();
+                if (roll < 0.15f) {
+                    yankFromBed(player, world);
+                } else if (roll < 0.40f && ConfigManager.get().enableMonsters) {
+                    nightVisitor(player, world);
+                }
             }
         }
         if (!sleeping) {
@@ -170,6 +176,39 @@ public final class SanityManager {
         modify(player, -12.0f);
         ru.exeswi.exest.events.ApparitionSpawner.spawnApparition(player,
                 ru.exeswi.exest.events.ApparitionSpawner.Placement.BEHIND);
+    }
+
+    /**
+     * The night visitor: sleep is interrupted and something is already standing at
+     * the bed, hunting. Sleeping through the horror stops being a free skip button.
+     */
+    private static void nightVisitor(ServerPlayerEntity player, ServerWorld world) {
+        BlockPos spot = ru.exeswi.exest.util.HorrorUtil.findGroundSpot(
+                world, player, 2.0, 5.0, false, world.random);
+        if (spot == null) {
+            return;
+        }
+        var type = world.random.nextBoolean()
+                ? ru.exeswi.exest.registry.ModEntities.STALKER
+                : ru.exeswi.exest.registry.ModEntities.SMILER;
+        ru.exeswi.exest.entity.base.AbstractHorrorEntity visitor = type.create(world);
+        if (visitor == null) {
+            return;
+        }
+        visitor.refreshPositionAndAngles(spot.getX() + 0.5, spot.getY(), spot.getZ() + 0.5,
+                world.random.nextFloat() * 360.0f, 0.0f);
+        visitor.initialize(world, world.getLocalDifficulty(spot),
+                net.minecraft.entity.SpawnReason.EVENT, null);
+        visitor.setPersistent();
+        if (!world.spawnEntity(visitor)) {
+            return;
+        }
+        player.wakeUp(true, true);
+        visitor.enrage(player);
+        HorrorNetworking.sendCueBehind(player, ru.exeswi.exest.networking.SoundCue.STING,
+                (float) ConfigManager.get().audioIntensity);
+        HorrorNetworking.sendMood(player, 0.6f, 0.2f, 0, 150);
+        modify(player, -10.0f);
     }
 
     /** Sanity below this triggers hallucination-grade events. */

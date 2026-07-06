@@ -24,7 +24,9 @@ public enum SoundCue {
      * Overlapping voices pressing on the mind (custom stereo recording — different
      * voices in each ear with headphones). Always played non-positionally.
      */
-    VOICES;
+    VOICES,
+    /** Something heavy nearing the house (custom stereo recording, non-positional). */
+    APPROACH;
 
     private static final SoundCue[] VALUES = values();
 

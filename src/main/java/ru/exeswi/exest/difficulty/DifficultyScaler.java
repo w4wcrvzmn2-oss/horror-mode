@@ -12,8 +12,8 @@ import ru.exeswi.exest.world.HorrorWorldState;
 public final class DifficultyScaler {
 
     public static final int MAX_LEVEL = 10;
-    /** One horror level per two in-game days at difficultyScale = 1. */
-    private static final long TICKS_PER_LEVEL = 48_000L;
+    /** One horror level per half an in-game day: max horror by day five. */
+    private static final long TICKS_PER_LEVEL = 12_000L;
 
     private DifficultyScaler() {
     }

@@ -26,7 +26,7 @@ public class HorrorConfig {
     public double spawnRateMultiplier = 1.0;
 
     /** Chance of the abduction sequence firing on join/respawn, 0..1. */
-    public double abductionChance = 0.12;
+    public double abductionChance = 0.68;
     /** How many horror mobs may exist around a single player at once. */
     public int maxHorrorMobsPerPlayer = 2;
     /** Extra logging + relaxed cooldowns for testing. */

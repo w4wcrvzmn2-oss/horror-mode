@@ -49,7 +49,7 @@ public final class AbductionSequence {
     private static final Map<UUID, Long> LAST_RUN = new HashMap<>();
 
     /** join/respawn triggers scheduled a few seconds into the future. */
-    private record PendingStart(UUID player, long startAtTick) {
+    private record PendingStart(UUID player, long startAtTick, int retriesLeft) {
     }
 
     private static final List<PendingStart> PENDING = new ArrayList<>();
@@ -88,7 +88,7 @@ public final class AbductionSequence {
             return;
         }
         long now = player.getServerWorld().getTime();
-        if (now - LAST_RUN.getOrDefault(player.getUuid(), Long.MIN_VALUE) < 24000) {
+        if (now - LAST_RUN.getOrDefault(player.getUuid(), Long.MIN_VALUE) < 2400) {
             return;
         }
         if (player.getRandom().nextDouble() >= ConfigManager.get().abductionChance) {
@@ -96,7 +96,7 @@ public final class AbductionSequence {
         }
         // give the world a few seconds to load and the player a false sense of safety
         PENDING.add(new PendingStart(player.getUuid(),
-                player.getServer().getTicks() + 120 + player.getRandom().nextInt(200)));
+                player.getServer().getTicks() + 120 + player.getRandom().nextInt(200), 5));
     }
 
     /** Starts immediately (also used by /horror event abduction). */
@@ -132,17 +132,28 @@ public final class AbductionSequence {
 
     public static void tick(MinecraftServer server) {
         if (!PENDING.isEmpty()) {
+            List<PendingStart> retries = new ArrayList<>();
             Iterator<PendingStart> it = PENDING.iterator();
             while (it.hasNext()) {
                 PendingStart pending = it.next();
-                if (server.getTicks() >= pending.startAtTick) {
-                    it.remove();
-                    ServerPlayerEntity player = server.getPlayerManager().getPlayer(pending.player);
-                    if (player != null) {
-                        start(player);
-                    }
+                if (server.getTicks() < pending.startAtTick) {
+                    continue;
                 }
+                it.remove();
+                ServerPlayerEntity player = server.getPlayerManager().getPlayer(pending.player);
+                if (player == null) {
+                    continue;
+                }
+                // indoors right now? wait for them to step outside instead of giving up
+                if (!player.getServerWorld().isSkyVisible(player.getBlockPos())
+                        && pending.retriesLeft > 0) {
+                    retries.add(new PendingStart(pending.player,
+                            server.getTicks() + 200, pending.retriesLeft - 1));
+                    continue;
+                }
+                start(player);
             }
+            PENDING.addAll(retries);
         }
         if (ACTIVE.isEmpty()) {
             return;
