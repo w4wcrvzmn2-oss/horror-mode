@@ -20,14 +20,14 @@ public final class WorldEvents {
     }
 
     public static void registerAll() {
-        HorrorEvent.builder("red_moon", WORLD).weight(8).cooldown(36000).minDifficulty(2)
+        HorrorEvent.builder("red_moon", WORLD).weight(8).cooldown(36000).minDifficulty(1)
                 .enabledWhen(c -> c.enableWorldEvents)
                 .condition(p -> p.getServerWorld().isNight())
                 .action((p, m) -> m.moodForWorld(p.getServerWorld(),
                         0.35f, 0.25f, MoodPayload.FLAG_RED_MOON, 2400)).register();
 
         // both are short, sharp shocks — never a sustained "can't see anything" state
-        HorrorEvent.builder("blackout", WORLD).weight(6).cooldown(36000).minDifficulty(3)
+        HorrorEvent.builder("blackout", WORLD).weight(6).cooldown(36000).minDifficulty(1)
                 .enabledWhen(c -> c.enableWorldEvents && c.enableDarkness)
                 .action((p, m) -> m.moodForWorld(p.getServerWorld(),
                         0.95f, 0.6f, 0, 160)).register();
@@ -37,7 +37,7 @@ public final class WorldEvents {
                 .action((p, m) -> m.moodForWorld(p.getServerWorld(),
                         0.3f, 0.97f, 0, 240)).register();
 
-        HorrorEvent.builder("endless_thunder", WORLD).weight(6).cooldown(48000).minDifficulty(2)
+        HorrorEvent.builder("endless_thunder", WORLD).weight(6).cooldown(48000).minDifficulty(1)
                 .enabledWhen(c -> c.enableWorldEvents)
                 .action(WorldEvents::endlessThunder).register();
 

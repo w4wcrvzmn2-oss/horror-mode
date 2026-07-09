@@ -80,7 +80,8 @@ public final class ApparitionSpawner {
         if (pos == null) {
             return false;
         }
-        int maxIndex = Math.min(HUNTER_UNLOCKS.size() - 1, DifficultyScaler.level(world));
+        // two creatures unlocked from the start, one more per level — variety early
+        int maxIndex = Math.min(HUNTER_UNLOCKS.size() - 1, 1 + DifficultyScaler.level(world));
         EntityType<? extends AbstractHorrorEntity> type =
                 HUNTER_UNLOCKS.get(world.random.nextInt(maxIndex + 1));
         AbstractHorrorEntity entity = type.create(world);

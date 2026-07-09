@@ -32,6 +32,8 @@ public class HorrorWorldState extends PersistentState {
     public long horrorTicks;
     /** Earliest world time the final hunt may (re)start. */
     public long nextFinalHuntAt;
+    /** The scripted first-night welcome has already happened. */
+    public boolean firstNightDone;
 
     public static final int STAT_COUNT = 7;
 
@@ -155,6 +157,7 @@ public class HorrorWorldState extends PersistentState {
             }
         }
         state.nextFinalHuntAt = nbt.getLong("NextFinalHunt");
+        state.firstNightDone = nbt.getBoolean("FirstNightDone");
         NbtList statsList = nbt.getList("Stats", NbtElement.COMPOUND_TYPE);
         for (int i = 0; i < statsList.size(); i++) {
             NbtCompound entry = statsList.getCompound(i);
@@ -206,6 +209,7 @@ public class HorrorWorldState extends PersistentState {
         }
         nbt.put("DisclaimerSeen", seenList);
         nbt.putLong("NextFinalHunt", nextFinalHuntAt);
+        nbt.putBoolean("FirstNightDone", firstNightDone);
         NbtList statsList = new NbtList();
         for (Map.Entry<UUID, int[]> entry : stats.entrySet()) {
             NbtCompound tag = new NbtCompound();

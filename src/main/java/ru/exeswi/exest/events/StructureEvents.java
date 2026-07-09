@@ -32,11 +32,11 @@ public final class StructureEvents {
     }
 
     public static void registerAll() {
-        HorrorEvent.builder("abandoned_hut", RARE).weight(5).cooldown(48000).minDifficulty(1)
+        HorrorEvent.builder("abandoned_hut", RARE).weight(5).cooldown(48000)
                 .condition(p -> p.getServerWorld().isSkyVisible(p.getBlockPos()))
                 .action(StructureEvents::placeHut).register();
 
-        HorrorEvent.builder("forest_altar", RARE).weight(5).cooldown(48000).minDifficulty(1)
+        HorrorEvent.builder("forest_altar", RARE).weight(5).cooldown(48000)
                 .condition(p -> p.getServerWorld().isSkyVisible(p.getBlockPos()))
                 .action(StructureEvents::placeAltar).register();
     }

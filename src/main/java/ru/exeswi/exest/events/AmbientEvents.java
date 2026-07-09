@@ -25,7 +25,7 @@ public final class AmbientEvents {
     }
 
     public static void registerAll() {
-        HorrorEvent.builder("footsteps", AMBIENT).weight(20).cooldown(600)
+        HorrorEvent.builder("footsteps", AMBIENT).weight(14).cooldown(600)
                 .action((p, m) -> {
                     m.cueAt(p, SoundCue.DISTANT_FOOTSTEPS, soundSpot(p, 8, 18), 0.9f);
                     SanityManager.modify(p, -0.5f);
@@ -70,7 +70,7 @@ public final class AmbientEvents {
                 .action((p, m) -> m.cueAt(p, SoundCue.RADIO, soundSpot(p, 6, 14), 0.6f)).register();
 
         HorrorEvent.builder("heartbeat", AMBIENT).weight(8).cooldown(1200)
-                .condition(p -> SanityManager.get(p) < 40.0f)
+                .condition(p -> SanityManager.get(p) < 70.0f)
                 .action((p, m) -> m.cueBehind(p, SoundCue.HEARTBEAT, 0.8f)).register();
 
         HorrorEvent.builder("distant_scream", AMBIENT).weight(6).cooldown(2400)
@@ -86,9 +86,9 @@ public final class AmbientEvents {
 
         // the voices: a custom stereo recording that crawls into both ears at once.
         // rare and sanity-gated so it stays an event, not a background loop
-        HorrorEvent.builder("voices", AMBIENT).weight(7).cooldown(6000)
+        HorrorEvent.builder("voices", AMBIENT).weight(8).cooldown(6000)
                 .enabledWhen(c -> c.audioIntensity > 0)
-                .condition(p -> SanityManager.get(p) < 65.0f)
+                .condition(p -> SanityManager.get(p) < 80.0f)
                 .action((p, m) -> {
                     m.cueBehind(p, SoundCue.VOICES, 0.9f);
                     SanityManager.modify(p, -4.0f);

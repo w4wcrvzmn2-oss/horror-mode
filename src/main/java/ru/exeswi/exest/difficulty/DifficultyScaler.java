@@ -27,9 +27,9 @@ public final class DifficultyScaler {
         return (int) Math.min(MAX_LEVEL, ticks * scale / TICKS_PER_LEVEL);
     }
 
-    /** 1.0 at level 0 growing to ~2.0 at max level; multiplies event rates. */
+    /** Brisk from the very start (~1.25 at level 0), ~2.0 at max; multiplies event rates. */
     public static double frequencyMultiplier(ServerWorld world) {
-        return 1.0 + level(world) * 0.1;
+        return 1.25 + level(world) * 0.08;
     }
 
     /** Extra attack damage granted to freshly spawned horror mobs. */

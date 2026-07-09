@@ -71,6 +71,7 @@ public class Exest implements ModInitializer {
             }
             if (server.getTicks() % 100 == 0) {
                 ru.exeswi.exest.events.FinalHunt.tick(server);
+                ru.exeswi.exest.events.FirstNight.tick(server);
             }
         });
 

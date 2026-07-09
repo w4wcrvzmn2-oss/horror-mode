@@ -47,7 +47,7 @@ public final class EncounterEvents {
                 }).register();
 
         // the sharp one: the world goes dead silent, then it is suddenly RIGHT THERE
-        HorrorEvent.builder("close_encounter", ENCOUNTER).weight(10).cooldown(3600)
+        HorrorEvent.builder("close_encounter", ENCOUNTER).weight(13).cooldown(3600)
                 .enabledWhen(c -> c.enableMonsters && c.enableJumpscares)
                 .action((p, m) -> m.silenceThen(p, 60, () -> {
                     AbstractHorrorEntity ghost = ApparitionSpawner.spawnApparition(p, Placement.IN_VIEW);
@@ -59,7 +59,7 @@ public final class EncounterEvents {
                 })).register();
 
         // total silence... then heavy breathing right behind you. Turn around.
-        HorrorEvent.builder("behind_you", ENCOUNTER).weight(8).cooldown(4800)
+        HorrorEvent.builder("behind_you", ENCOUNTER).weight(10).cooldown(4800)
                 .enabledWhen(c -> c.enableMonsters && c.enableJumpscares)
                 .action((p, m) -> m.silenceThen(p, 50, () -> {
                     AbstractHorrorEntity ghost = ApparitionSpawner.spawnApparition(p, Placement.BEHIND);
@@ -71,13 +71,13 @@ public final class EncounterEvents {
 
         // THE CHASE. Silence, a sting, and something sprinting at your back. Running
         // into bright light shakes it off; getting caught costs one brutal hit.
-        HorrorEvent.builder("night_chase", ENCOUNTER).weight(8).cooldown(12000).minDifficulty(1)
+        HorrorEvent.builder("night_chase", ENCOUNTER).weight(10).cooldown(12000)
                 .enabledWhen(c -> c.enableMonsters && c.enableJumpscares)
                 .condition(p -> p.getServerWorld().isNight())
                 .action((p, m) -> m.silenceThen(p, 70, () -> startChase(p, m))).register();
 
         // daylight is not a rule you can rely on. Rare, late-game, unforgettable.
-        HorrorEvent.builder("day_chase", ENCOUNTER).weight(2).cooldown(24000).minDifficulty(4)
+        HorrorEvent.builder("day_chase", ENCOUNTER).weight(2).cooldown(24000).minDifficulty(3)
                 .enabledWhen(c -> c.enableMonsters && c.enableJumpscares)
                 .condition(p -> p.getServerWorld().isDay())
                 .action((p, m) -> m.silenceThen(p, 70, () -> startChase(p, m))).register();
@@ -125,7 +125,7 @@ public final class EncounterEvents {
                 .condition(p -> p.getRandom().nextDouble() < ConfigManager.get().spawnRateMultiplier)
                 .action((p, m) -> ApparitionSpawner.spawnHunter(p)).register();
 
-        HorrorEvent.builder("pack_hunt", ENCOUNTER).weight(6).cooldown(6000).minDifficulty(5)
+        HorrorEvent.builder("pack_hunt", ENCOUNTER).weight(6).cooldown(6000).minDifficulty(3)
                 .enabledWhen(c -> c.enableMonsters && c.spawnRateMultiplier > 0)
                 .action((p, m) -> {
                     int packSize = 2 + p.getRandom().nextInt(2);
