@@ -1,5 +1,5 @@
 {
-	"entity.exest.stalker": "Stalker",
+	"entity.exest.stalker": "Benton",
 	"entity.exest.shadow": "The Tall One",
 	"entity.exest.smiler": "Smiler",
 	"entity.exest.broken_villager": "Broken Villager",
@@ -10,6 +10,8 @@
 	"entity.exest.flesh": "Flesh Amalgam",
 	"entity.exest.mimic": "Mimic",
 	"entity.exest.predator": "The Unseen",
+	"entity.exest.murder": "Murder",
+	"entity.exest.ridavoumax": "Ridavoumax",
 	"category.exest.horror": "Horror Mode",
 	"key.exest.toggle_hud": "Toggle Horror HUD"
 }

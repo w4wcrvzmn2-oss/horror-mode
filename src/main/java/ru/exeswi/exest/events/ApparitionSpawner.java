@@ -33,13 +33,14 @@ public final class ApparitionSpawner {
     /** Which creatures may appear as apparitions from the very start. */
     private static final List<EntityType<? extends AbstractHorrorEntity>> APPARITION_POOL = List.of(
             ModEntities.STALKER, ModEntities.SHADOW, ModEntities.SMILER,
-            ModEntities.FACELESS, ModEntities.MIMIC);
+            ModEntities.FACELESS, ModEntities.MIMIC, ModEntities.MURDER);
 
     /** Hunter unlock order; index = minimum difficulty level. */
     private static final List<EntityType<? extends AbstractHorrorEntity>> HUNTER_UNLOCKS = List.of(
             ModEntities.STALKER, ModEntities.EYELESS_ZOMBIE, ModEntities.CRAWLER,
-            ModEntities.BROKEN_VILLAGER, ModEntities.DISTORTED_ENDERMAN, ModEntities.SHADOW,
-            ModEntities.SMILER, ModEntities.FLESH, ModEntities.PREDATOR, ModEntities.FACELESS);
+            ModEntities.MURDER, ModEntities.BROKEN_VILLAGER, ModEntities.DISTORTED_ENDERMAN,
+            ModEntities.SHADOW, ModEntities.SMILER, ModEntities.FLESH, ModEntities.PREDATOR,
+            ModEntities.FACELESS, ModEntities.RIDAVOUMAX);
 
     private ApparitionSpawner() {
     }

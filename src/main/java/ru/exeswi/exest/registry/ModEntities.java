@@ -13,6 +13,8 @@ import ru.exeswi.exest.entity.EyelessZombieEntity;
 import ru.exeswi.exest.entity.FacelessEntity;
 import ru.exeswi.exest.entity.FleshEntity;
 import ru.exeswi.exest.entity.MimicEntity;
+import ru.exeswi.exest.entity.MurderEntity;
+import ru.exeswi.exest.entity.RidavoumaxEntity;
 import ru.exeswi.exest.entity.PredatorEntity;
 import ru.exeswi.exest.entity.ShadowEntity;
 import ru.exeswi.exest.entity.SmilerEntity;
@@ -58,6 +60,12 @@ public final class ModEntities {
     public static final EntityType<PredatorEntity> PREDATOR = register("predator",
             EntityType.Builder.create(PredatorEntity::new, SpawnGroup.MONSTER)
                     .dimensions(0.6f, 1.9f).maxTrackingRange(96));
+    public static final EntityType<MurderEntity> MURDER = register("murder",
+            EntityType.Builder.create(MurderEntity::new, SpawnGroup.MONSTER)
+                    .dimensions(0.6f, 1.95f).maxTrackingRange(96));
+    public static final EntityType<RidavoumaxEntity> RIDAVOUMAX = register("ridavoumax",
+            EntityType.Builder.create(RidavoumaxEntity::new, SpawnGroup.MONSTER)
+                    .dimensions(0.6f, 2.1f).maxTrackingRange(96));
 
     private ModEntities() {
     }
@@ -78,5 +86,7 @@ public final class ModEntities {
         FabricDefaultAttributeRegistry.register(FLESH, FleshEntity.createFleshAttributes());
         FabricDefaultAttributeRegistry.register(MIMIC, MimicEntity.createMimicAttributes());
         FabricDefaultAttributeRegistry.register(PREDATOR, PredatorEntity.createPredatorAttributes());
+        FabricDefaultAttributeRegistry.register(MURDER, MurderEntity.createMurderAttributes());
+        FabricDefaultAttributeRegistry.register(RIDAVOUMAX, RidavoumaxEntity.createRidavoumaxAttributes());
     }
 }

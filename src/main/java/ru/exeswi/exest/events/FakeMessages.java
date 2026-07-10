@@ -105,7 +105,9 @@ public final class FakeMessages {
             "you are not alone, %s",
             "%s, stop hiding",
             "behind you, %s",
-            "%s, why did you stop digging"
+            "%s, why did you stop digging",
+            "%s, benton was asking about you",
+            "%s. do not read the name aloud"
     };
 
     private static String pick(net.minecraft.server.network.ServerPlayerEntity player, String[] pool) {

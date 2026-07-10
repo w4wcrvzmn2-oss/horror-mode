@@ -1,5 +1,5 @@
 {
-	"entity.exest.stalker": "Сталкер",
+	"entity.exest.stalker": "Бентон",
 	"entity.exest.shadow": "Высокий",
 	"entity.exest.smiler": "Улыбающийся",
 	"entity.exest.broken_villager": "Сломанный житель",
@@ -10,6 +10,8 @@
 	"entity.exest.flesh": "Сгусток плоти",
 	"entity.exest.mimic": "Мимик",
 	"entity.exest.predator": "Незримый",
+	"entity.exest.murder": "Murder",
+	"entity.exest.ridavoumax": "Ридавумакс",
 	"category.exest.horror": "Horror Mode",
 	"key.exest.toggle_hud": "Показать/скрыть HUD ужаса"
 }

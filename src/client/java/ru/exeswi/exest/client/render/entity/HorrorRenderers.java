@@ -24,11 +24,13 @@ public final class HorrorRenderers {
     private static final Identifier SPIDER = Identifier.ofVanilla("textures/entity/spider/spider.png");
     private static final Identifier ENDERMAN = Identifier.ofVanilla("textures/entity/enderman/enderman.png");
 
-    private static final Identifier STALKER = Exest.id("textures/entity/stalker.png");
+    private static final Identifier BENTON = Exest.id("textures/entity/benton.png");
     private static final Identifier STALKER_EYES = Exest.id("textures/entity/stalker_eyes.png");
     private static final Identifier SMILER = Exest.id("textures/entity/smiler.png");
     private static final Identifier SMILER_EYES = Exest.id("textures/entity/smiler_eyes.png");
     private static final Identifier SHADOW_EYES = Exest.id("textures/entity/shadow_eyes.png");
+    private static final Identifier MURDER = Exest.id("textures/entity/murder.png");
+    private static final Identifier RIDAVOUMAX = Exest.id("textures/entity/ridavoumax.png");
 
     private HorrorRenderers() {
     }
@@ -36,7 +38,7 @@ public final class HorrorRenderers {
     public static void register() {
         EntityRendererRegistry.register(ModEntities.STALKER, ctx -> new HorrorMobRenderer<>(ctx,
                 new PlayerEntityModel<>(ctx.getPart(EntityModelLayers.PLAYER), false),
-                STALKER, STALKER_EYES, 0.5f, 1.05f, false));
+                BENTON, STALKER_EYES, 0.5f, 1.05f, false));
         EntityRendererRegistry.register(ModEntities.SHADOW, ctx -> new HorrorMobRenderer<>(ctx,
                 new PlayerEntityModel<>(ctx.getPart(EntityModelLayers.PLAYER), true),
                 STEVE, SHADOW_EYES, 0.4f, 1.35f, true));
@@ -59,5 +61,10 @@ public final class HorrorRenderers {
                 new PlayerEntityModel<>(ctx.getPart(EntityModelLayers.PLAYER), false), STEVE, 0.5f, 1.0f, false));
         EntityRendererRegistry.register(ModEntities.PREDATOR, ctx -> new HorrorMobRenderer<>(ctx,
                 new PlayerEntityModel<>(ctx.getPart(EntityModelLayers.PLAYER), false), STEVE, 0.0f, 1.0f, true));
+        EntityRendererRegistry.register(ModEntities.MURDER, ctx -> new HorrorMobRenderer<>(ctx,
+                new PlayerEntityModel<>(ctx.getPart(EntityModelLayers.PLAYER), false), MURDER, 0.5f, 1.0f, false));
+        EntityRendererRegistry.register(ModEntities.RIDAVOUMAX, ctx -> new HorrorMobRenderer<>(ctx,
+                new PlayerEntityModel<>(ctx.getPart(EntityModelLayers.PLAYER), false),
+                RIDAVOUMAX, SHADOW_EYES, 0.0f, 1.15f, false));
     }
 }

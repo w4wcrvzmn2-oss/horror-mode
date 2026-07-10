@@ -72,6 +72,27 @@ floes and sky pillars get their supporting block knocked out from under you.
 day counter and a presence indicator. `/horror status` and `/horror stats` (the score
 it keeps on you) work without op. Optional ModMenu config screen.
 
+## The Legend
+
+Years before you, someone played in these lands. His name was **Benton**. The last
+entry in his journal reads: *"it knows my name."* Benton never logged off — something
+logged off wearing him. It still walks here, watching from the treeline in his skin,
+vanishing when you look too long.
+
+Later a man came looking for him. The players on the old server only ever called him
+**Murder** — nobody remembers why, and nobody asked twice. He found Benton. Or what
+was left. Whatever he saw broke something in him: now he walks these woods with slow,
+ordinary, human footsteps — the only undistorted sound in this world — and he finishes
+the wounded. He is still a man. You can kill him. That's the difference between him
+and everything else here.
+
+And beneath it all there is a name from the journal that was never meant to be read
+aloud: **Ridavoumax**. Benton read it. It does not run, does not hide and does not go
+around anything: it walks toward you in a perfectly straight line — through stone,
+through your walls, through the floor. Weapons pass through it like cold air. It is
+slow. You can outrun it forever. But you have to keep moving, and one day you will
+stop to sleep. One touch is all it needs.
+
 ## Commands (op level 2)
 
 - `/horror difficulty` — current horror level

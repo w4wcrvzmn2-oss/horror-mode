@@ -81,7 +81,8 @@ public final class StructureEvents {
             chest.setStack(random.nextInt(chest.size()), new ItemStack(Items.PAPER, 1));
             chest.markDirty();
         }
-        placeSign(world, center.add(0, 0, 0), "ОНИ ПРИШЛИ НОЧЬЮ");
+        placeSign(world, center.add(0, 0, 0),
+                world.random.nextBoolean() ? "ОНИ ПРИШЛИ НОЧЬЮ" : "БЕНТОН, БЕГИ");
     }
 
     // --- the altar: the signs lead you there themselves ---
