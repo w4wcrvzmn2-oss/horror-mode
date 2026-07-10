@@ -19,7 +19,6 @@ import ru.exeswi.exest.world.HorrorWorldState;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -253,16 +252,21 @@ public final class HorrorEventManager {
             return;
         }
         long now = server.getTicks();
-        Iterator<ScheduledTask> it = tasks.iterator();
-        while (it.hasNext()) {
-            ScheduledTask task = it.next();
+        // drain due tasks FIRST, run them after: a running task may schedule new ones,
+        // and mutating the list mid-iteration is a ConcurrentModificationException crash
+        List<ScheduledTask> due = new ArrayList<>();
+        tasks.removeIf(task -> {
             if (task.fireAtTick <= now) {
-                it.remove();
-                try {
-                    task.action.run();
-                } catch (Exception e) {
-                    Exest.LOGGER.error("Scheduled horror task failed", e);
-                }
+                due.add(task);
+                return true;
+            }
+            return false;
+        });
+        for (ScheduledTask task : due) {
+            try {
+                task.action.run();
+            } catch (Exception e) {
+                Exest.LOGGER.error("Scheduled horror task failed", e);
             }
         }
     }
