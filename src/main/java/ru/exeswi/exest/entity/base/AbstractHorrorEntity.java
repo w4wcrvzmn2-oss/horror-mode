@@ -53,6 +53,7 @@ public abstract class AbstractHorrorEntity extends HostileEntity {
     private boolean spawnedBehind;
     private boolean everStared;
     private boolean homeApproachPlayed;
+    private int idleTicks;
 
     /** Shared cooldown so a pack closing in doesn't layer the approach sting. */
     private static final java.util.Map<java.util.UUID, Long> LAST_HOME_APPROACH = new java.util.HashMap<>();
@@ -97,6 +98,7 @@ public abstract class AbstractHorrorEntity extends HostileEntity {
         }
         tickCampingCounter();
         tickHomeApproach();
+        tickIdleRestlessness();
         // creatures that overstayed their welcome leave quietly, but never on camera
         if (maxLifeTicks > 0 && lifeTicks > maxLifeTicks && !isSeenByAnyone()) {
             discard();
@@ -348,6 +350,8 @@ public abstract class AbstractHorrorEntity extends HostileEntity {
         // any standable spot right next to the victim will do — view cone be damned
         BlockPos spot = HorrorUtil.findGroundSpot(world, victim, 1.0, 4.0, false, random);
         if (spot != null && teleportToSpot(spot)) {
+            // it came here for a reason — no forgetting the victim mid-punish
+            setTarget(victim);
             HorrorNetworking.sendEffect(victim, HorrorEffect.STATIC, 0.6f, 10);
             world.playSound(null, getX(), getY(), getZ(),
                     SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.HOSTILE, 0.9f, 0.3f);
@@ -378,6 +382,32 @@ public abstract class AbstractHorrorEntity extends HostileEntity {
         if (age >= supportBreakAt) {
             world.breakBlock(supportBreakPos, false, this);
             supportBreakPos = null;
+        }
+    }
+
+    /**
+     * No statues: a hunter that lost its target never just stands there. Watched, it
+     * starts a slow, silent walk straight at the nearest player; unwatched, it
+     * relocates out of sight and resumes the hunt from a fresh angle.
+     */
+    private void tickIdleRestlessness() {
+        if (getTarget() != null || !getNavigation().isIdle()) {
+            idleTicks = 0;
+            return;
+        }
+        idleTicks++;
+        if (idleTicks < 300 || idleTicks % 40 != 0) {
+            return;
+        }
+        ServerPlayerEntity player = closestSurvivalPlayer(48.0);
+        if (player == null) {
+            return;
+        }
+        if (isSeenByAnyone()) {
+            // they are watching it do nothing — so it starts walking. Slowly. At them.
+            getNavigation().startMovingTo(player, 0.85);
+        } else if (teleportOutsideView(12.0, 28.0)) {
+            idleTicks = 0;
         }
     }
 

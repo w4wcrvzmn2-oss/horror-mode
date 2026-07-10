@@ -22,6 +22,9 @@ import ru.exeswi.exest.entity.base.AbstractHorrorEntity;
  */
 public class EyelessZombieEntity extends AbstractHorrorEntity {
 
+    /** Until this age it refuses to forget its victim, no matter how quiet they go. */
+    private int bloodMemoryUntil;
+
     public EyelessZombieEntity(EntityType<? extends HostileEntity> type, World world) {
         super(type, world);
     }
@@ -53,12 +56,33 @@ public class EyelessZombieEntity extends AbstractHorrorEntity {
         if (getWorld().isClient || isApparition()) {
             return;
         }
-        // a victim that goes quiet fades out of its perception
-        if (getTarget() instanceof PlayerEntity player && player.isSneaking()
+        // a victim that goes quiet fades out of its perception — unless it has
+        // already tasted their blood: that memory holds for a full minute
+        if (age >= bloodMemoryUntil
+                && getTarget() instanceof PlayerEntity player && player.isSneaking()
                 && player.getVelocity().horizontalLengthSquared() < 0.002
                 && random.nextInt(40) == 0) {
             setTarget(null);
         }
+    }
+
+    @Override
+    public boolean tryAttack(net.minecraft.entity.Entity target) {
+        boolean hit = super.tryAttack(target);
+        if (hit) {
+            bloodMemoryUntil = age + 1200;
+        }
+        return hit;
+    }
+
+    @Override
+    public boolean damage(net.minecraft.entity.damage.DamageSource source, float amount) {
+        boolean damaged = super.damage(source, amount);
+        if (damaged && source.getAttacker() instanceof PlayerEntity) {
+            // pain works like sound: it knows exactly where you are now
+            bloodMemoryUntil = age + 1200;
+        }
+        return damaged;
     }
 
     @Override
