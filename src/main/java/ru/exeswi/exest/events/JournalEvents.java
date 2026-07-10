@@ -38,14 +38,53 @@ public final class JournalEvents {
             "РИДАВУМАКС. Теперь ты прочитал."
     };
 
+    private static final java.util.Map<java.util.UUID, Integer> TIMER = new java.util.HashMap<>();
+
     private JournalEvents() {
     }
 
     public static void registerAll() {
-        HorrorEvent.builder("journal", RARE).weight(4).cooldown(36000)
+        // weight 0: the journal runs on its own per-player schedule below;
+        // this stays as a manual trigger for /horror event journal
+        HorrorEvent.builder("journal", RARE).weight(0).cooldown(100)
                 .enabledWhen(c -> c.enableHallucinations)
-                .condition(p -> SanityManager.get(p) < 80.0f)
                 .action(JournalEvents::updateJournal).register();
+    }
+
+    /**
+     * The journal keeps its own clock, one per player: the first entry lands a couple
+     * of minutes into the session, then every 5-9 minutes — for everyone on the
+     * server independently. No shared cooldowns, no dice: it always gets written.
+     * Called every 20 ticks from the main loop.
+     */
+    public static void tick(net.minecraft.server.MinecraftServer server) {
+        if (!ru.exeswi.exest.config.ConfigManager.get().enableHallucinations) {
+            return;
+        }
+        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+            if (player.isSpectator()) {
+                continue;
+            }
+            java.util.UUID id = player.getUuid();
+            if (!TIMER.containsKey(id)) {
+                TIMER.put(id, 1200 + player.getRandom().nextInt(1800));
+                continue;
+            }
+            int left = TIMER.merge(id, -20, Integer::sum);
+            if (left <= 0) {
+                TIMER.put(id, 6000 + player.getRandom().nextInt(4800));
+                updateJournal(player, null);
+            }
+        }
+    }
+
+    /** Death or a lost book cannot erase it: whatever it wrote about you comes back. */
+    public static void restoreBook(ServerPlayerEntity player) {
+        List<String> entries = HorrorWorldState.get(player.getServerWorld())
+                .getJournal(player.getUuid());
+        if (!entries.isEmpty()) {
+            giveOrRefreshBook(player, entries);
+        }
     }
 
     private static void updateJournal(ServerPlayerEntity player, HorrorEventManager manager) {

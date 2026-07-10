@@ -60,6 +60,7 @@ public class Exest implements ModInitializer {
             if (server.getTicks() % 20 == 0) {
                 SanityManager.tick(server);
                 PlayerBehaviorTracker.tick(server);
+                ru.exeswi.exest.events.JournalEvents.tick(server);
                 for (var player : server.getPlayerManager().getPlayerList()) {
                     if (!player.isSpectator()) {
                         ru.exeswi.exest.events.StructureEvents.checkAltars(player);
@@ -98,6 +99,7 @@ public class Exest implements ModInitializer {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             SanityManager.forceSync(handler.getPlayer());
             sendDisclaimerOnce(handler.getPlayer());
+            ru.exeswi.exest.events.JournalEvents.restoreBook(handler.getPlayer());
             AbductionSequence.maybeSchedule(handler.getPlayer());
         });
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
@@ -110,6 +112,8 @@ public class Exest implements ModInitializer {
             worldState.setSanity(newPlayer.getUuid(),
                     Math.max(50.0f, worldState.getSanity(newPlayer.getUuid())));
             SanityManager.forceSync(newPlayer);
+            // the journal survives death — it comes back with everything it wrote
+            ru.exeswi.exest.events.JournalEvents.restoreBook(newPlayer);
             AbductionSequence.maybeSchedule(newPlayer);
             if (newPlayer.getRandom().nextFloat() < 0.4f) {
                 String eventId = switch (newPlayer.getRandom().nextInt(3)) {
