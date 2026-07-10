@@ -73,7 +73,10 @@ public final class ApparitionSpawner {
     /** Spawns a real, hostile hunter outside the player's view. Respects the per-player cap. */
     public static boolean spawnHunter(ServerPlayerEntity player) {
         ServerWorld world = player.getServerWorld();
-        if (countHuntersAround(player) >= ConfigManager.get().maxHorrorMobsPerPlayer) {
+        // the cap scales with the group: four friends together deserve four times the company
+        int groupSize = Math.max(1, world.getPlayers(p -> !p.isSpectator() && p.isAlive()
+                && p.squaredDistanceTo(player) < 64.0 * 64.0).size());
+        if (countHuntersAround(player) >= ConfigManager.get().maxHorrorMobsPerPlayer * groupSize) {
             return false;
         }
         BlockPos pos = HorrorUtil.findGroundSpot(world, player, 20.0, 40.0, true, world.random);

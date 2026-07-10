@@ -81,6 +81,22 @@ public final class FakeMessages {
                             Text.literal(p.getGameProfile().getName())).formatted(Formatting.YELLOW), false);
                     ru.exeswi.exest.sanity.SanityManager.modify(p, -8.0f);
                 }).register();
+
+        // co-op gaslighting at its purest: "<your friend> left the game" — while he is
+        // standing right there answering you in voice chat
+        HorrorEvent.builder("friend_left", FAKE).weight(5).cooldown(18000)
+                .enabledWhen(c -> c.enableFakeMessages)
+                .condition(p -> p.getServer() != null
+                        && p.getServer().getPlayerManager().getPlayerList().size() >= 2)
+                .action((p, m) -> {
+                    var others = p.getServer().getPlayerManager().getPlayerList().stream()
+                            .filter(other -> other != p).toList();
+                    var friend = others.get(p.getRandom().nextInt(others.size()));
+                    p.sendMessage(Text.translatable("multiplayer.player.left",
+                            Text.literal(friend.getGameProfile().getName()))
+                            .formatted(Formatting.YELLOW), false);
+                    ru.exeswi.exest.sanity.SanityManager.modify(p, -6.0f);
+                }).register();
     }
 
     private static final String[] PERSONAL = {

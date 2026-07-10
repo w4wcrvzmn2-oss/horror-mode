@@ -180,13 +180,15 @@ public abstract class AbstractHorrorEntity extends HostileEntity {
      * The final hunt's boss: enormous health, no vanishing rules, no escape into
      * light, no one-hit-and-gone. It stops only when it is dead — or you are.
      */
-    public void makeFinalBoss() {
+    public void makeFinalBoss(int playerCount) {
         finalBoss = true;
         setPersistent();
+        // scales with the group: a lone survivor faces 300 HP, four friends face 750
+        float maxHealth = 300.0f + 150.0f * Math.max(0, playerCount - 1);
         var health = getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
         if (health != null) {
-            health.setBaseValue(300.0);
-            setHealth(300.0f);
+            health.setBaseValue(maxHealth);
+            setHealth(maxHealth);
         }
         var damage = getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE);
         if (damage != null) {

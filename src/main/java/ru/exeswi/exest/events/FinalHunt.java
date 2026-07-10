@@ -134,7 +134,7 @@ public final class FinalHunt {
         }
         boss.refreshPositionAndAngles(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0.0f, 0.0f);
         boss.initialize(world, world.getLocalDifficulty(pos), SpawnReason.EVENT, null);
-        boss.makeFinalBoss();
+        boss.makeFinalBoss(players.size());
         boss.setCustomName(Text.literal("ОНО").formatted(Formatting.DARK_RED));
         boss.setCustomNameVisible(true);
         if (!world.spawnEntity(boss)) {

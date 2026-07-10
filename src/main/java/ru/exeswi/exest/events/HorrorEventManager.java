@@ -199,6 +199,18 @@ public final class HorrorEventManager {
         HorrorNetworking.sendCueAt(player, cue, pos, (float) (volume * ConfigManager.get().audioIntensity));
     }
 
+    /**
+     * Co-op moments: everyone close enough hears the same thing from the same spot,
+     * so the whole group turns their heads at once.
+     */
+    public void cueForNearby(ServerWorld world, Vec3d pos, SoundCue cue, float volume, double radius) {
+        for (ServerPlayerEntity player : world.getPlayers()) {
+            if (!player.isSpectator() && player.getPos().squaredDistanceTo(pos) < radius * radius) {
+                cueAt(player, cue, pos, volume);
+            }
+        }
+    }
+
     public void cueBehind(ServerPlayerEntity player, SoundCue cue, float volume) {
         HorrorNetworking.sendCueBehind(player, cue, (float) (volume * ConfigManager.get().audioIntensity));
     }

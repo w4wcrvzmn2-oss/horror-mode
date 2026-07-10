@@ -32,7 +32,8 @@ public final class EncounterEvents {
         apparition("apparition_window", Placement.WINDOW, 6, 3600);
         apparition("apparition_underwater", Placement.UNDERWATER, 4, 3600);
 
-        // a figure standing openly in your field of view, announced by a whisper
+        // a figure standing openly in your field of view, announced by a whisper —
+        // friends close by hear it from the same spot and turn together
         HorrorEvent.builder("apparition_distance", ENCOUNTER).weight(14).cooldown(1600)
                 .enabledWhen(c -> c.enableMonsters)
                 .action((p, m) -> {
@@ -41,10 +42,26 @@ public final class EncounterEvents {
                         ghost = ApparitionSpawner.spawnApparition(p, Placement.DISTANCE);
                     }
                     if (ghost != null) {
-                        m.cueAt(p, SoundCue.WHISPER, ghost.getPos(), 0.9f);
+                        m.cueForNearby(p.getServerWorld(), ghost.getPos(), SoundCue.WHISPER, 0.9f, 32.0);
                         SanityManager.modify(p, -2.0f);
                     }
                 }).register();
+
+        // THE SURROUND: a co-op signature. The group falls silent — then every member
+        // simultaneously gets their own hunter, closing in from different directions.
+        HorrorEvent.builder("surround", ENCOUNTER).weight(8).cooldown(12000).minDifficulty(1)
+                .enabledWhen(c -> c.enableMonsters && c.spawnRateMultiplier > 0)
+                .condition(p -> !othersNear(p, 24.0).isEmpty())
+                .action((p, m) -> m.silenceThen(p, 60, () -> {
+                    java.util.List<ServerPlayerEntity> cluster = new java.util.ArrayList<>(othersNear(p, 24.0));
+                    cluster.add(p);
+                    for (ServerPlayerEntity member : cluster) {
+                        spawnHunterFor(member, true);
+                        m.cueBehind(member, SoundCue.STING, 1.0f);
+                        m.cueBehind(member, SoundCue.HEARTBEAT, 0.9f);
+                        SanityManager.modify(member, -8.0f);
+                    }
+                })).register();
 
         // the sharp one: the world goes dead silent, then it is suddenly RIGHT THERE
         HorrorEvent.builder("close_encounter", ENCOUNTER).weight(13).cooldown(3600)
@@ -52,7 +69,7 @@ public final class EncounterEvents {
                 .action((p, m) -> m.silenceThen(p, 60, () -> {
                     AbstractHorrorEntity ghost = ApparitionSpawner.spawnApparition(p, Placement.IN_VIEW);
                     if (ghost != null) {
-                        m.cueAt(p, SoundCue.STING, ghost.getPos(), 1.0f);
+                        m.cueForNearby(p.getServerWorld(), ghost.getPos(), SoundCue.STING, 1.0f, 32.0);
                         m.effect(p, HorrorEffect.GLITCH, 0.9f, 14);
                         SanityManager.modify(p, -6.0f);
                     }
@@ -175,6 +192,34 @@ public final class EncounterEvents {
         manager.cueBehind(player, SoundCue.HEARTBEAT, 1.0f);
         manager.mood(player, 0.45f, 0.2f, 0, 200);
         SanityManager.modify(player, -8.0f);
+        // panic is contagious: friends nearby hear the scream from where it started
+        for (ServerPlayerEntity witness : othersNear(player, 48.0)) {
+            manager.cueAt(witness, SoundCue.SCREAM, hunter.getPos(), 1.0f);
+            SanityManager.modify(witness, -3.0f);
+        }
+    }
+
+    /** Other survival players within the radius — the "cluster" for group scares. */
+    private static java.util.List<ServerPlayerEntity> othersNear(ServerPlayerEntity player, double radius) {
+        return player.getServerWorld().getPlayers(other -> other != player
+                && !other.isSpectator() && !other.isCreative() && other.isAlive()
+                && other.squaredDistanceTo(player) < radius * radius);
+    }
+
+    /** Spawns a hunter for a specific player, optionally already locked onto them. */
+    private static void spawnHunterFor(ServerPlayerEntity player, boolean aggressive) {
+        if (!ApparitionSpawner.spawnHunter(player)) {
+            return;
+        }
+        if (aggressive) {
+            // find the freshest hunter around and point it at its victim
+            var hunters = player.getServerWorld().getEntitiesByClass(AbstractHorrorEntity.class,
+                    net.minecraft.util.math.Box.of(player.getPos(), 90, 50, 90),
+                    e -> !e.isApparition() && e.getTarget() == null);
+            if (!hunters.isEmpty()) {
+                hunters.get(hunters.size() - 1).setTarget(player);
+            }
+        }
     }
 
     private static void apparition(String id, Placement placement, int weight, long cooldown) {
